@@ -30,6 +30,10 @@ public class Game {
         System.exit(0);
     }
 
+    public void click(int x, int y, boolean isEnemy){
+        placeShip(x,y,'v');
+    }
+
     public int placeShip(int x, int y, char orientation) {
         int numberOfShips = playerBoard.getNumberOfShips();
 
@@ -58,12 +62,14 @@ public class Game {
         return this.run;
     }
 
-    public int getPlayerCellStatus(int x,int y){
-        return playerBoard.getCellStatus(x,y);
-    }
+    public int getCellStatus(int x,int y, boolean isEnemy){
+        if (!isEnemy){
+            //System.out.println(playerBoard.getCellStatus(x,y));
+            return playerBoard.getCellStatus(x,y);
 
-    public int[][] getPlayerBoard(){
-        return playerBoard.getBoard();
+        } else {
+            return enemyBoard.getCellStatus(x,y);
+        }
     }
 
 }

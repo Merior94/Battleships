@@ -41,7 +41,7 @@ public class Cell {
     public void setShip(Ship ship) {
         this.ship = ship;
         this.status = 4;
-        System.out.println("setship" + status);
+        System.out.println("setship " + status);
     }
 
     public Ship getShip() {
@@ -51,6 +51,7 @@ public class Cell {
     public void clear() {
         this.ship = null;
         this.wasShot = false;
+        this.status = 0;
     }
 
     public int getStatus() {
