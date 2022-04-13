@@ -3,7 +3,10 @@ package com.kodilla.battleships;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -17,7 +20,7 @@ public class Battleships extends Application {
     //private Image imageback = new Image("file:src/main/resources/background.jpeg");
     //private Image card = new Image("file:src/main/resources/ship.jpg");
     //private FlowPane cards = new FlowPane(Orientation.HORIZONTAL);
-    public static boolean running = false;
+    private Game game = new Game();
 
     public static void main(String[] args) {
         launch();
@@ -30,16 +33,14 @@ public class Battleships extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
-    }
 
-    private void startGame(){
-        //place ships
-        running = true;
+        startNewGame();
     }
 
     private void startNewGame(){
         //clear tables
         System.out.println("Starting new game!");
+        game.newGame();
     }
 
 
@@ -78,10 +79,10 @@ public class Battleships extends Application {
         //cards.getChildren().add(img);
         //grid.add(cards, 1, 2, 2, 1);
 
-        //Button okBtn = new Button("OK");
-        //Button closeBtn = new Button("Close");
-        //root.add(okBtn, 0, 2);
-        //root.add(closeBtn, 1, 2);
+//        Button okBtn = new Button("OK");
+//        Button closeBtn = new Button("Close");
+//        root.add(okBtn, 0, 3);
+//        root.add(closeBtn, 1, 3);
 
         //Texts
         Text myBoardText = new Text();
@@ -94,17 +95,16 @@ public class Battleships extends Application {
         enemyBoardText.setText("Enemy board");
         root.add(enemyBoardText,1,1,1,1);
 
-
         //Menu
         root.add(createMenuBar(),0,0);
 
-
         //Boards
-        Board myBoard = new Board(false);
-        root.add(myBoard.board,0,2);
+        VisBoard visMyBoard = new VisBoard(false,game);
+        System.out.println(visMyBoard);
+        root.add(visMyBoard.board,0,2);
 
-        Board enemyBoard = new Board(true);
-        root.add(enemyBoard.board,1,2);
+        VisBoard visEnemyBoard = new VisBoard(true,game);
+        root.add(visEnemyBoard.board,1,2);
 
         return root;
     }
@@ -114,20 +114,18 @@ public class Battleships extends Application {
 
         Menu menuGame = new Menu("Game");
 
-        MenuItem menuItem1 = new MenuItem("New game");
+        MenuItem menuItem1 = new MenuItem("...");
         menuItem1.setOnAction(e -> {
-            startNewGame();
-            System.out.println("Menu 'New game' Selected");
+            //this.startGame();
         });
-        MenuItem menuItem2 = new MenuItem("Settings");
+        MenuItem menuItem2 = new MenuItem("New game");
         menuItem2.setOnAction(e -> {
-
-            System.out.println("Menu 'Settings' Selected");
+            this.startNewGame();
+            System.out.println("Place ships");
         });
         MenuItem menuItem3 = new MenuItem("Exit game");
         menuItem3.setOnAction(e -> {
-            System.out.println("Menu 'Exit game' Selected");
-            System.exit(0);
+            this.game.exit();
         });
 
         menuGame.getItems().add(menuItem1);
