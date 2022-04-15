@@ -15,4 +15,12 @@ public class Ship {
         isAlive = health > 0;
         return isAlive;
     }
+
+    public int getHealth(){
+        return this.health;
+    }
+
+    public boolean getIsAlive(){
+        return this.isAlive;
+    }
 }

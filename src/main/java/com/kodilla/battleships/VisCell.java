@@ -1,5 +1,6 @@
 package com.kodilla.battleships;
 
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -20,9 +21,18 @@ public class VisCell extends Rectangle {
         setStrokeWidth(1.5);
 
         this.setOnMouseClicked(e -> {
-            this.visu.game.click(x, y, board.isEnemy());
-            //int[][] drawBoard = game.getBoard(false);
-            //game.checkWinner?
+            this.visu.game.click(x, y, board.isEnemy(), (boolean)(e.getButton() == MouseButton.PRIMARY));
+
+            int winner = this.visu.game.hasWinner();
+            switch (winner) {
+                case 1:
+                    this.visu.showWinner("Player");
+                    break;
+                case 2:
+                    this.visu.showWinner("Enemy");
+                    break;
+                default:
+            }
             this.visu.refresh();
             //System.out.println("test" + x + " " + y + " " + board.isEnemy());
         });
@@ -44,7 +54,8 @@ public class VisCell extends Rectangle {
                 setFill(Color.BLACK); //hit and dead
                 break;
             case 4:
-                setFill(Color.GRAY);
+                if (!this.board.isEnemy())
+                    setFill(Color.GRAY);
                 setStroke(Color.GREEN); //ship present
                 break;
         }

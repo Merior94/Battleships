@@ -3,6 +3,7 @@ package com.kodilla.battleships;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -31,45 +32,32 @@ public class Visu {
         stage.show();
     }
 
-    private Pane createContent(){
-        //BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
-        //BackgroundImage backgroundImage = new BackgroundImage(imageback, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
-        //Background background = new Background(backgroundImage);
+    public void showWinner(String winner){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("The End");
+        alert.setHeaderText("We have a winner!");
+        alert.setContentText(winner + " wins!");
+        alert.showAndWait();
+    }
 
+    private Pane createContent(){
         GridPane root = new GridPane();
         root.setPrefSize(640,320);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(5));
         root.setHgap(5.5);
         root.setVgap(5.5);
-        //grid.setBackground(background);
-        root.setGridLinesVisible(true);
-
-//        ColumnConstraints cons1 = new ColumnConstraints();
-//        cons1.setHgrow(Priority.NEVER);
-//        root.getColumnConstraints().add(cons1);
-//
-//        ColumnConstraints cons2 = new ColumnConstraints();
-//        cons2.setHgrow(Priority.ALWAYS);
-//
-//        root.getColumnConstraints().addAll(cons1, cons2);
-//
-//        RowConstraints rcons1 = new RowConstraints();
-//        rcons1.setVgrow(Priority.NEVER);
-//
-//        RowConstraints rcons2 = new RowConstraints();
-//        rcons2.setVgrow(Priority.ALWAYS);
-//
-//        root.getRowConstraints().addAll(rcons1, rcons2);
-
-        //ImageView img = new ImageView(card);
-        //cards.getChildren().add(img);
-        //grid.add(cards, 1, 2, 2, 1);
+        //root.setGridLinesVisible(true);
 
 //        Button okBtn = new Button("OK");
 //        Button closeBtn = new Button("Close");
 //        root.add(okBtn, 0, 3);
 //        root.add(closeBtn, 1, 3);
+
+//        Text scoreText = new Text();
+//        scoreText.setFont(new Font(20));
+//        scoreText.setText(game.getScore());
+//        root.add(scoreText,1,0,1,1);
 
         //Texts
         Text myBoardText = new Text();
@@ -101,10 +89,10 @@ public class Visu {
 
         Menu menuGame = new Menu("Game");
 
-        MenuItem menuItem1 = new MenuItem("...");
-        menuItem1.setOnAction(e -> {
-            //this.startGame();
-        });
+//        MenuItem menuItem1 = new MenuItem("...");
+//        menuItem1.setOnAction(e -> {
+//            //this.startGame();
+//        });
         MenuItem menuItem2 = new MenuItem("New game");
         menuItem2.setOnAction(e -> {
             this.game.newGame();
@@ -116,7 +104,7 @@ public class Visu {
             this.game.exit();
         });
 
-        menuGame.getItems().add(menuItem1);
+        //menuGame.getItems().add(menuItem1);
         menuGame.getItems().add(menuItem2);
         menuGame.getItems().add(menuItem3);
         menuBar.getMenus().add(menuGame);
@@ -125,7 +113,6 @@ public class Visu {
     }
 
     public void refresh(){
-        System.out.println("refresh");
         visEnemyBoard.refresh();
         visPlayerBoard.refresh();
     }

@@ -20,6 +20,7 @@ public class Cell {
     public int shoot() {
         //System.out.println("cell shot!");
         if (wasShot == false) {
+            wasShot = true;
             if (ship != null) {
                 boolean isAlive = ship.hit();
                 if (isAlive) {
@@ -31,17 +32,16 @@ public class Cell {
                 }
             } else {
                 status = 1;
+                //System.out.println("miss");
                 return 1;   //no hit
             }
         }
-        //status = 0;
         return 0;   //try again
     }
 
     public void setShip(Ship ship) {
         this.ship = ship;
         this.status = 4;
-        System.out.println("setship " + status);
     }
 
     public Ship getShip() {
@@ -56,6 +56,10 @@ public class Cell {
 
     public int getStatus() {
         return status;
+    }
+
+    public boolean getWasShot(){
+        return wasShot;
     }
 
     @Override

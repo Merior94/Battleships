@@ -19,12 +19,6 @@ public class Battleships extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         visu.launch(stage);
-        startNewGame();
-    }
-
-    private void startNewGame(){
-        //clear tables
-        System.out.println("Starting new game!");
-        game.newGame();
+        visu.game.newGame();
     }
 }
