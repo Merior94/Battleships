@@ -9,16 +9,14 @@ public class Battleships extends Application {
     //private Image card = new Image("file:src/main/resources/ship.jpg");
     //private FlowPane cards = new FlowPane(Orientation.HORIZONTAL);
 
-    private Game game = new Game();
-    private Visu visu = new Visu(game);
-
     public static void main(String[] args) {
         launch();
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        visu.launch(stage);
-        visu.game.newGame();
+        Visu visu = new Visu(stage);
+        visu.launch();
+
     }
 }

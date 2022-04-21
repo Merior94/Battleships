@@ -1,16 +1,21 @@
 package com.kodilla.battleships;
 
+import java.util.IllegalFormatCodePointException;
 import java.util.Random;
 
 public class Game {
     private Board playerBoard;
     private Board enemyBoard;
     private boolean run;
+    private int enemyX;
+    private int enemyY;
 
     public Game() {
         this.run = false;
         this.playerBoard = new Board(false);
         this.enemyBoard = new Board(true);
+        this.enemyX = -1;
+        this.enemyY = -1;
     }
 
     public void newGame() {
@@ -66,14 +71,82 @@ public class Game {
                 }
 
                 if (enemyBoard.shoot(x, y) == 1) {
-                    while (playerBoard.shootRandom() != 1) ; //enemy shoots until miss
+
+                    //poziom trudnosci!!!
+                    Random random = new Random();
+                    //if (enemyX == -1 && enemyY == -1) {
+                    enemyX = random.nextInt(10);
+                    enemyY = random.nextInt(10);
+                    //}
+                    int enemyShootResult = playerBoard.shoot(enemyX, enemyY);
+                    System.out.println("first shoot -> x: " + enemyX + ", y: " + enemyY + " -> " + enemyShootResult);
+
+                    while (enemyShootResult != 1) {
+                        switch (enemyShootResult) {
+                            case 0:
+                                enemyX = enemyX + 1;
+                                if (enemyX > 9) {
+                                    enemyX = 0;
+                                    enemyY++;
+                                    if (enemyY > 9) {
+                                        enemyY = 0;
+                                    }
+                                }
+                                enemyShootResult = playerBoard.shoot(enemyX, enemyY);
+                                break;
+
+                            case 1:
+                                enemyX = random.nextInt(10);
+                                enemyY = random.nextInt(10);
+                                enemyShootResult = playerBoard.shoot(enemyX, enemyY);
+                                break;
+
+                            case 2:
+                                playerBoard.setAsShoot(enemyX-1,enemyY-1);
+                                playerBoard.setAsShoot(enemyX-1,enemyY+1);
+                                playerBoard.setAsShoot(enemyX+1,enemyY-1);
+                                playerBoard.setAsShoot(enemyX+1,enemyY+1);
+
+                                enemyX = enemyX + random.nextInt(3) - 1;
+                                if (enemyX < 0)
+                                    enemyX = 0;
+                                if (enemyX > 9)
+                                    enemyX = 9;
+
+                                enemyY = enemyY + random.nextInt(3) - 1;
+                                if (enemyY < 0)
+                                    enemyY = 0;
+                                if (enemyY > 9)
+                                    enemyY = 9;
+
+                                enemyShootResult = playerBoard.shoot(enemyX, enemyY);
+                                break;
+
+                            case 3:
+                                playerBoard.setAsShoot(enemyX-1,enemyY-1);
+                                playerBoard.setAsShoot(enemyX-1,enemyY+1);
+                                playerBoard.setAsShoot(enemyX+1,enemyY-1);
+                                playerBoard.setAsShoot(enemyX+1,enemyY+1);
+                                playerBoard.setAsShoot(enemyX,enemyY-1);
+                                playerBoard.setAsShoot(enemyX,enemyY+1);
+                                playerBoard.setAsShoot(enemyX-1,enemyY);
+                                playerBoard.setAsShoot(enemyX+1,enemyY);
+
+                                enemyX = random.nextInt(10);
+                                enemyY = random.nextInt(10);
+                                enemyShootResult = playerBoard.shoot(enemyX, enemyY);
+                                break;
+                        }
+                        System.out.println("x: " + enemyX + ", y: " + enemyY + " -> " + enemyShootResult);
+                    }
+                    ; //enemy shoots until miss
                 }
             }
         }
     }
 
     public String getScore() {
-        return ("Enemy life:" + playerBoard.getHealthOfShips() + "Enemy life:" + enemyBoard.getHealthOfShips());
+        return ("Player ships: " + playerBoard.getHealthOfShips() + " | Enemy ships: " + enemyBoard.getHealthOfShips());
     }
 
     public int hasWinner() {

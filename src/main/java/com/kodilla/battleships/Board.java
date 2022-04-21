@@ -24,11 +24,10 @@ public class Board {
         return this.cells[x][y].shoot();
     }
 
-    public int shootRandom() {
-        Random random = new Random();
-        int x = random.nextInt(10);
-        int y = random.nextInt(10);
-        return this.cells[x][y].shoot();
+    public void setAsShoot(int x, int y) {
+        if (x>=0 && x<10 && y>=0 && y<10) {
+            this.cells[x][y].setIsEmpty();
+        }
     }
 
     public boolean placeShip(int type, int x, int y, char orientation) {

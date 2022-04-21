@@ -30,11 +30,10 @@ public class Cell {
                     status = 3;
                     return 3;   //hit and dead
                 }
-            } else {
-                status = 1;
-                //System.out.println("miss");
-                return 1;   //no hit
             }
+            status = 1;
+            //System.out.println("miss");
+            return 1;   //no hit
         }
         return 0;   //try again
     }
@@ -58,8 +57,15 @@ public class Cell {
         return status;
     }
 
-    public boolean getWasShot(){
+    public boolean getWasShot() {
         return wasShot;
+    }
+
+    public void setIsEmpty(){
+        this.wasShot = true;
+        if (this.status!=2 && this.status!=3) {
+            this.status = 5;
+        }
     }
 
     @Override
