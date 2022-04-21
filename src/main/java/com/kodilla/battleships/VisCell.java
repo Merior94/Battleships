@@ -7,7 +7,6 @@ import javafx.scene.shape.Rectangle;
 public class VisCell extends Rectangle {
     private Visu visu;
     private int x, y;
-    private Ship ship;
     private VisBoard board;
 
     public VisCell(int x, int y, VisBoard board, Visu visu) {
@@ -59,7 +58,7 @@ public class VisCell extends Rectangle {
                 setStroke(Color.GREEN); //ship present
                 break;
             case 5:
-                setFill(Color.DARKBLUE); //hit and dead
+                setFill(Color.DARKBLUE); //empty field
                 break;
 
         }

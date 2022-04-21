@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -142,11 +141,6 @@ public class Visu {
         root.setVgap(5.5);
         //root.setGridLinesVisible(true);
 
-//        Text scoreText = new Text();
-//        scoreText.setFont(new Font(20));
-//        scoreText.setText(game.getScore());
-//        root.add(scoreText,1,0,1,1);
-
         //Texts
         Text myBoardText = new Text();
         myBoardText.setFont(new Font(20));
@@ -174,11 +168,7 @@ public class Visu {
         root.add(this.scoreText,1,0,1,1);
 
         //Boards
-        //this.visMyBoard = new VisBoard(false,game, this);
-        System.out.println(visPlayerBoard);
         root.add(visPlayerBoard.board,0,2);
-
-        //VisBoard visEnemyBoard = new VisBoard(true,game,this);
         root.add(visEnemyBoard.board,1,2);
 
         return root;
@@ -186,7 +176,6 @@ public class Visu {
 
     private MenuBar createMenuBar(){
         MenuBar menuBar = new MenuBar();
-
         Menu menuGame = new Menu("Game");
 
         MenuItem menuItem1 = new MenuItem("Main menu");

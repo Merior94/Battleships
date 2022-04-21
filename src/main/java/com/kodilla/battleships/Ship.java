@@ -19,8 +19,4 @@ public class Ship {
     public int getHealth(){
         return this.health;
     }
-
-    public boolean getIsAlive(){
-        return this.isAlive;
-    }
 }
