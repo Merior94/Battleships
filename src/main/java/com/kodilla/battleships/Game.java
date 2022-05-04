@@ -1,14 +1,19 @@
 package com.kodilla.battleships;
 
-import java.util.IllegalFormatCodePointException;
-import java.util.Random;
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.lang.Math.abs;
 
 public class Game {
-    private Board playerBoard;
-    private Board enemyBoard;
+    private final Board playerBoard;
+    private final Board enemyBoard;
     private boolean run;
     private int enemyX;
     private int enemyY;
+    File savedRanking = new File("ranking.list");
+    List<RankingEntry> ranking = new ArrayList<>();
 
     public Game() {
         this.run = false;
@@ -28,10 +33,6 @@ public class Game {
     public void exit() {
         System.out.println("Exit...");
         System.exit(0);
-    }
-
-    public boolean isRunning() {
-        return this.run;
     }
 
     private void start() {
@@ -58,10 +59,12 @@ public class Game {
 
         //System.out.println("click!" + x + " " + y);
         if (!this.run) { //prepare game
-            if (primaryButton) {
-                this.placeShip(x, y, 'v');
-            } else {
-                this.placeShip(x, y, 'h');
+            if (!isEnemy) { //use only players board
+                if (primaryButton) {
+                    this.placeShip(x, y, 'v');
+                } else {
+                    this.placeShip(x, y, 'h');
+                }
             }
         } else {    //play
             if (isEnemy) {
@@ -71,71 +74,56 @@ public class Game {
                 }
 
                 if (enemyBoard.shoot(x, y) == 1) {
-
-                    //poziom trudnosci!!!
                     Random random = new Random();
-                    //if (enemyX == -1 && enemyY == -1) {
-                    enemyX = random.nextInt(10);
-                    enemyY = random.nextInt(10);
-                    //}
-                    int enemyShootResult = playerBoard.shoot(enemyX, enemyY);
-                    System.out.println("first shoot -> x: " + enemyX + ", y: " + enemyY + " -> " + enemyShootResult);
+                    Cell[] freeCells;
+                    Cell target;
+                    int enemyShootResult = 0;
 
-                    while (enemyShootResult != 1) {
+                    while (enemyShootResult != 1) {         //until miss
+
+                        freeCells = playerBoard.getNotShootedCells();   //szukaj niestrzelonych
+
                         switch (enemyShootResult) {
-                            case 0:
-                                enemyX = enemyX + 1;
-                                if (enemyX > 9) {
-                                    enemyX = 0;
-                                    enemyY++;
-                                    if (enemyY > 9) {
-                                        enemyY = 0;
-                                    }
+                            case 0 -> {
+                                target = freeCells[random.nextInt(freeCells.length)];   //wylosuj z niestrzelonych
+                                enemyX = target.getX();
+                                enemyY = target.getY();
+                                enemyShootResult = playerBoard.shoot(enemyX, enemyY);
+                            }
+                            case 2 -> {
+                                playerBoard.setAsShoot(enemyX - 1, enemyY - 1);
+                                playerBoard.setAsShoot(enemyX - 1, enemyY + 1);
+                                playerBoard.setAsShoot(enemyX + 1, enemyY - 1);
+                                playerBoard.setAsShoot(enemyX + 1, enemyY + 1);
+                                freeCells = Arrays.stream(freeCells)
+                                        .filter(c -> !c.getWasShot())
+                                        .filter(c -> abs(enemyX - c.getX()) <= 1)
+                                        .filter(c -> abs(enemyY - c.getY()) <= 1)
+                                        .toArray(Cell[]::new);
+                                System.out.println("---hit---");
+                                for (Cell c : freeCells) {
+                                    System.out.println(c + " ");
                                 }
+                                System.out.println("------");
+                                target = freeCells[random.nextInt(freeCells.length)];   //wylosuj z sąsiadów
+                                enemyX = target.getX();
+                                enemyY = target.getY();
                                 enemyShootResult = playerBoard.shoot(enemyX, enemyY);
-                                break;
-
-                            case 1:
-                                enemyX = random.nextInt(10);
-                                enemyY = random.nextInt(10);
+                            }
+                            case 3 -> {
+                                playerBoard.setAsShoot(enemyX - 1, enemyY - 1);
+                                playerBoard.setAsShoot(enemyX - 1, enemyY + 1);
+                                playerBoard.setAsShoot(enemyX + 1, enemyY - 1);
+                                playerBoard.setAsShoot(enemyX + 1, enemyY + 1);
+                                playerBoard.setAsShoot(enemyX, enemyY - 1);
+                                playerBoard.setAsShoot(enemyX, enemyY + 1);
+                                playerBoard.setAsShoot(enemyX - 1, enemyY);
+                                playerBoard.setAsShoot(enemyX + 1, enemyY);
+                                target = freeCells[random.nextInt(freeCells.length)];   //wylosuj z niestrzelonych
+                                enemyX = target.getX();
+                                enemyY = target.getY();
                                 enemyShootResult = playerBoard.shoot(enemyX, enemyY);
-                                break;
-
-                            case 2:
-                                playerBoard.setAsShoot(enemyX-1,enemyY-1);
-                                playerBoard.setAsShoot(enemyX-1,enemyY+1);
-                                playerBoard.setAsShoot(enemyX+1,enemyY-1);
-                                playerBoard.setAsShoot(enemyX+1,enemyY+1);
-
-                                enemyX = enemyX + random.nextInt(3) - 1;
-                                if (enemyX < 0)
-                                    enemyX = 0;
-                                if (enemyX > 9)
-                                    enemyX = 9;
-
-                                enemyY = enemyY + random.nextInt(3) - 1;
-                                if (enemyY < 0)
-                                    enemyY = 0;
-                                if (enemyY > 9)
-                                    enemyY = 9;
-
-                                enemyShootResult = playerBoard.shoot(enemyX, enemyY);
-                                break;
-
-                            case 3:
-                                playerBoard.setAsShoot(enemyX-1,enemyY-1);
-                                playerBoard.setAsShoot(enemyX-1,enemyY+1);
-                                playerBoard.setAsShoot(enemyX+1,enemyY-1);
-                                playerBoard.setAsShoot(enemyX+1,enemyY+1);
-                                playerBoard.setAsShoot(enemyX,enemyY-1);
-                                playerBoard.setAsShoot(enemyX,enemyY+1);
-                                playerBoard.setAsShoot(enemyX-1,enemyY);
-                                playerBoard.setAsShoot(enemyX+1,enemyY);
-
-                                enemyX = random.nextInt(10);
-                                enemyY = random.nextInt(10);
-                                enemyShootResult = playerBoard.shoot(enemyX, enemyY);
-                                break;
+                            }
                         }
                         System.out.println("x: " + enemyX + ", y: " + enemyY + " -> " + enemyShootResult);
                     }
@@ -152,9 +140,11 @@ public class Game {
     public int hasWinner() {
         if (this.run) {
             if (enemyBoard.getHealthOfShips() == 0) {
+                addToRanking();
                 return 1;
             }
             if (playerBoard.getHealthOfShips() == 0) {
+                addToRanking();
                 return 2;
             }
         }
@@ -169,25 +159,22 @@ public class Game {
         }
     }
 
-    public int placeShip(int x, int y, char orientation) {
+    public void placeShip(int x, int y, char orientation) {
         int numberOfShips = playerBoard.getNumberOfShips();
 
         switch (numberOfShips) {
-            case 0:
+            case 0 -> {
                 playerBoard.placeShip(4, x, y, orientation);
-                return 1;
-
-            case 1, 2:
+            }
+            case 1, 2 -> {
                 playerBoard.placeShip(3, x, y, orientation);
-                return 1;
-
-            case 3, 4, 5:
+            }
+            case 3, 4, 5 -> {
                 playerBoard.placeShip(2, x, y, orientation);
-                return 1;
-
-            default:
+            }
+            default -> {
                 this.start();
-                return 0;
+            }
         }
     }
 
@@ -219,4 +206,43 @@ public class Game {
         }
     }
 
+    public void addToRanking() {
+        ranking.add(new RankingEntry(playerBoard.getHealthOfShips(), enemyBoard.getHealthOfShips()));
+        saveRanking();
+    }
+
+    public List<RankingEntry> getRanking() {
+        return ranking;
+    }
+
+    public void saveRanking() {
+        System.out.println("saving...");
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(savedRanking));
+            oos.writeObject(ranking);
+            oos.close();
+        } catch (Exception e) {
+            System.out.println("exception! " + e);
+        }
+    }
+
+    public void loadRanking() {
+        System.out.println("loading...");
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(savedRanking));
+            Object readObject = ois.readObject();
+
+            Object readMap = ois.readObject();
+            if (readMap instanceof HashMap) {
+                ranking.clear();
+                ranking.addAll((ArrayList) readObject);
+            }
+            ois.close();
+            ranking = ranking.stream().sorted(Comparator.comparing(RankingEntry::getDt).reversed()).collect(Collectors.toList());
+
+        } catch (Exception e) {
+            ranking.clear();
+            System.out.println("exception! " + e);
+        }
+    }
 }

@@ -11,6 +11,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class Visu {
     public Game game;
@@ -22,6 +24,7 @@ public class Visu {
     private Scene sceneRanking;
     private Scene sceneSettings;
     private Text scoreText;
+    Text[] ranking = new Text[10];
 
     public Visu(Stage stage) {
         this.stage = stage;
@@ -29,6 +32,7 @@ public class Visu {
         this.scoreText = new Text();
         this.visPlayerBoard = new VisBoard(false,game, this);
         this.visEnemyBoard = new VisBoard(true,game,this);
+        this.ranking = new Text[10];
     }
 
     public void launch() {
@@ -37,8 +41,8 @@ public class Visu {
 
         this.sceneGame = new Scene(createContent());
         this.sceneMenu = new Scene(createMenuContent());
-        //this.sceneGame = new Scene(createRankingContent());
-        //this.sceneGame = new Scene(createSettingsContent());
+        this.sceneRanking = new Scene(createRankingContent());
+        //this.sceneSettings = new Scene(createSettingsContent());
 
         this.stage.setScene(this.sceneMenu);
 
@@ -80,7 +84,6 @@ public class Visu {
         btn0.setMinWidth(120);
         btn1.setMinWidth(120);
         btn2.setMinWidth(120);
-        btn2.setStyle("-fx-background-color: DARKGREY; ");
         btn3.setMinWidth(120); //Color.DARKGREY
         btn3.setStyle("-fx-background-color: DARKGREY; ");
         btn4.setMinWidth(120);
@@ -88,7 +91,7 @@ public class Visu {
         root.add(btn0, 0, 1);   //If there is game started
         root.add(btn1, 0, 2);
         root.add(btn2, 0, 3);
-        root.add(btn3, 0, 4);
+        //root.add(btn3, 0, 4);
         root.add(btn4, 0, 6);
 
         btn0.setOnAction(new EventHandler<ActionEvent>() {
@@ -111,7 +114,8 @@ public class Visu {
         btn2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //stage.setScene(sceneRanking);
+                stage.setScene(sceneRanking);
+                refreshRanking();
             }
         });
 
@@ -199,6 +203,53 @@ public class Visu {
         menuBar.getMenus().add(menuGame);
 
         return menuBar;
+    }
+
+    private Pane createRankingContent(){
+        GridPane root = new GridPane();
+        root.setPrefSize(640,320);
+        root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(5));
+        root.setHgap(5.5);
+        root.setVgap(5.5);
+        //root.setGridLinesVisible(true);
+
+        //Texts
+        Text myTitle = new Text();
+        myTitle.setFont(new Font(20));
+        myTitle.setText("Ranking");
+        root.add(myTitle,0,1,1,1);
+
+
+        for (int i=0; i<ranking.length; i++) {
+            ranking[i] = new Text();
+            ranking[i].setFont(new Font(20));
+            root.add(ranking[i],1,2+i);
+        }
+
+        //Menu
+        //root.add(createMenuBar(),0,0);
+        Button menuBtn = new Button("Menu");
+        root.add(menuBtn, 0, 0);
+        menuBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                stage.setScene(sceneMenu);
+            }
+        });
+
+        return root;
+    }
+
+    public void refreshRanking(){
+        this.game.loadRanking();
+        List<RankingEntry> rank = this.game.getRanking();
+        for (int i=0; i<rank.size(); i++){
+            this.ranking[i].setText(i+1 + ". " 
+                    + "Player " + rank.get(i).getPlayerScore() + " : " 
+                    + rank.get(i).getEnemyScore() + " Enemy - at "
+                    + rank.get(i).getDt().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        }
     }
 
     public void refresh(){

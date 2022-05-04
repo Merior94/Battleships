@@ -1,6 +1,7 @@
 package com.kodilla.battleships;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Board {
@@ -24,7 +25,7 @@ public class Board {
     }
 
     public void setAsShoot(int x, int y) {
-        if (x>=0 && x<10 && y>=0 && y<10) {
+        if (x >= 0 && x < 10 && y >= 0 && y < 10) {
             this.cells[x][y].setIsEmpty();
         }
     }
@@ -118,5 +119,22 @@ public class Board {
         //System.out.println("Neighbours of x:y " + x + " " + y + " result: " + result);
 
         return result;
+    }
+
+    public Cell[] getNotShootedCells() {
+        Cell[] freeCells = Arrays.stream(this.cells)
+                .flatMap(Arrays::stream)
+                .filter(c -> !c.getWasShot())
+                .toArray(Cell[]::new);
+//                .findFirst()
+//                .stream().findFirst().orElse(null);
+
+        for (Cell c:freeCells) {
+            System.out.println(c + " ");
+
+        }
+        //System.out.println(cell);
+
+        return freeCells;
     }
 }

@@ -22,15 +22,9 @@ public class VisCell extends Rectangle {
         this.setOnMouseClicked(e -> {
             this.visu.game.click(x, y, board.isEnemy(), (boolean) (e.getButton() == MouseButton.PRIMARY));
 
-            int winner = this.visu.game.hasWinner();
-            switch (winner) {
-                case 1:
-                    this.visu.showWinner("Player");
-                    break;
-                case 2:
-                    this.visu.showWinner("Enemy");
-                    break;
-                default:
+            switch (this.visu.game.hasWinner()) {
+                case 1 -> this.visu.showWinner("Player");
+                case 2 -> this.visu.showWinner("Enemy");
             }
             this.visu.refresh();
             //System.out.println("test" + x + " " + y + " " + board.isEnemy());

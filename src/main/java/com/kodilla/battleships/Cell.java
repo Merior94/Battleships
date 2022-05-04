@@ -58,4 +58,23 @@ public class Cell {
             this.status = 5;
         }
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public String toString() {
+        return "Cell{" +
+                "ship=" + ship +
+                ", wasShot=" + wasShot +
+                ", x=" + x +
+                ", y=" + y +
+                ", status=" + status +
+                '}';
+    }
 }
