@@ -1,19 +1,15 @@
 package com.kodilla.battleships;
 
 public class Ship {
-    private int type;
     private int health;
-    private boolean isAlive;
 
     public Ship(int type) {
-        this.type = type;
-        this.health = this.type;
+        this.health = type;
     }
 
     public boolean hit(){
         health--;
-        isAlive = health > 0;
-        return isAlive;
+        return health > 0;
     }
 
     public int getHealth(){

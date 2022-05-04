@@ -5,9 +5,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class VisCell extends Rectangle {
-    private Visu visu;
-    private int x, y;
-    private VisBoard board;
+    private final Visu visu;
+    private final int x;
+    private final int y;
+    private final VisBoard board;
 
     public VisCell(int x, int y, VisBoard board, Visu visu) {
         super(30, 30);
@@ -20,41 +21,31 @@ public class VisCell extends Rectangle {
         setStrokeWidth(1.5);
 
         this.setOnMouseClicked(e -> {
-            this.visu.game.click(x, y, board.isEnemy(), (boolean) (e.getButton() == MouseButton.PRIMARY));
+            this.visu.game.click(x, y, board.isEnemy(), (e.getButton() == MouseButton.PRIMARY));
 
             switch (this.visu.game.hasWinner()) {
                 case 1 -> this.visu.showWinner("Player");
                 case 2 -> this.visu.showWinner("Enemy");
             }
             this.visu.refresh();
-            //System.out.println("test" + x + " " + y + " " + board.isEnemy());
         });
     }
 
     public void refresh() {
         switch (visu.game.getCellStatus(this.x, this.y, this.board.isEnemy())) {
-            case 0:
+            case 0 -> {
                 setFill(Color.LIGHTGRAY);
                 setStroke(Color.BLACK);
-                break;
-            case 1:
-                setFill(Color.BLUE); //miss
-                break;
-            case 2:
-                setFill(Color.RED); //hit
-                break;
-            case 3:
-                setFill(Color.BLACK); //hit and dead
-                break;
-            case 4:
+            }
+            case 1 -> setFill(Color.BLUE); //miss
+            case 2 -> setFill(Color.RED); //hit
+            case 3 -> setFill(Color.BLACK); //hit and dead
+            case 4 -> {
                 if (!this.board.isEnemy())
                     setFill(Color.GRAY);
                 setStroke(Color.GREEN); //ship present
-                break;
-            case 5:
-                setFill(Color.DARKBLUE); //empty field
-                break;
-
+            }
+            case 5 -> setFill(Color.DARKBLUE); //empty field
         }
     }
 }

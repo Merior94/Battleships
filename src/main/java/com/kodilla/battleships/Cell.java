@@ -3,8 +3,8 @@ package com.kodilla.battleships;
 public class Cell {
     private Ship ship;
     private boolean wasShot;
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     private int status;
 
     public Cell(int x, int y) {
@@ -15,7 +15,7 @@ public class Cell {
     }
 
     public int shoot() {
-        if (wasShot == false) {
+        if (!wasShot) {
             wasShot = true;
             if (ship != null) {
                 boolean isAlive = ship.hit();

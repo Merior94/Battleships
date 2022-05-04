@@ -17,14 +17,13 @@ public class Game {
 
     public Game() {
         this.run = false;
-        this.playerBoard = new Board(false);
-        this.enemyBoard = new Board(true);
+        this.playerBoard = new Board();
+        this.enemyBoard = new Board();
         this.enemyX = -1;
         this.enemyY = -1;
     }
 
     public void newGame() {
-        //clear boards;
         this.run = false;
         playerBoard.clear();
         enemyBoard.clear();
@@ -56,8 +55,6 @@ public class Game {
     }
 
     public void click(int x, int y, boolean isEnemy, boolean primaryButton) {
-
-        //System.out.println("click!" + x + " " + y);
         if (!this.run) { //prepare game
             if (!isEnemy) { //use only players board
                 if (primaryButton) {

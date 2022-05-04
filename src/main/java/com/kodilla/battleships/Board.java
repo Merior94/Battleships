@@ -5,12 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Board {
-    private boolean isEnemy;
-    private Cell[][] cells;
-    private List<Ship> ships;
+    private final Cell[][] cells;
+    private final List<Ship> ships;
 
-    public Board(boolean isEnemy) {
-        this.isEnemy = isEnemy;
+    public Board() {
         this.ships = new ArrayList<>();
         this.cells = new Cell[10][10];
         for (int i = 0; i < 10; i++) {
@@ -30,7 +28,7 @@ public class Board {
         }
     }
 
-    public boolean placeShip(int type, int x, int y, char orientation) {
+    public void placeShip(int type, int x, int y, char orientation) {
         //check if possible
         Ship ship = new Ship(type);
         if (orientation == 'v' && canShipBePlaced(type, x, y, 'v')) {
@@ -45,7 +43,6 @@ public class Board {
                 this.cells[x + i][y].setShip(ship);
             }
         }
-        return true;
     }
 
     public boolean canShipBePlaced(int type, int x, int y, char orientation) {
@@ -63,7 +60,6 @@ public class Board {
                 }
                 break;
         }
-        //System.out.println("Can be placed? " + result);
         return (result == 0);
     }
 
@@ -76,10 +72,9 @@ public class Board {
     }
 
     public int getHealthOfShips() {
-        int health = ships.stream()
-                .map(ship -> ship.getHealth())
+        return ships.stream()
+                .map(Ship::getHealth)
                 .reduce(0, Integer::sum);
-        return health;
     }
 
     public void clear() {
@@ -116,8 +111,6 @@ public class Board {
         result += this.getCellStatus(x + 1, y);
         result += this.getCellStatus(x + 1, y + 1);
 
-        //System.out.println("Neighbours of x:y " + x + " " + y + " result: " + result);
-
         return result;
     }
 
@@ -126,15 +119,11 @@ public class Board {
                 .flatMap(Arrays::stream)
                 .filter(c -> !c.getWasShot())
                 .toArray(Cell[]::new);
-//                .findFirst()
-//                .stream().findFirst().orElse(null);
 
         for (Cell c:freeCells) {
             System.out.println(c + " ");
 
         }
-        //System.out.println(cell);
-
         return freeCells;
     }
 }
