@@ -40,7 +40,7 @@ public class Game {
         System.out.println("Enemy is placing ships...");
 
         Random random = new Random();
-        int result = 0;
+        int result;
         char orient;
         do {
             if (random.nextInt() % 2 == 0) {
@@ -127,7 +127,6 @@ public class Game {
                         }
                         System.out.println("x: " + enemyX + ", y: " + enemyY + " -> " + enemyShootResult);
                     }
-                    ; //enemy shoots until miss
                 }
             }
         }
@@ -163,18 +162,10 @@ public class Game {
         int numberOfShips = playerBoard.getNumberOfShips();
 
         switch (numberOfShips) {
-            case 0 -> {
-                playerBoard.placeShip(4, x, y, orientation);
-            }
-            case 1, 2 -> {
-                playerBoard.placeShip(3, x, y, orientation);
-            }
-            case 3, 4, 5 -> {
-                playerBoard.placeShip(2, x, y, orientation);
-            }
-            default -> {
-                this.start();
-            }
+            case 0 -> playerBoard.placeShip(4, x, y, orientation);
+            case 1, 2 -> playerBoard.placeShip(3, x, y, orientation);
+            case 3, 4, 5 -> playerBoard.placeShip(2, x, y, orientation);
+            default -> this.start();
         }
     }
 
